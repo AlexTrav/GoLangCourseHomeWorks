@@ -1,11 +1,11 @@
 package main
 
-// ТЗ - https://go.dev/tour/flowcontrol/8
-
 import (
 	"fmt"
 	"math"
 )
+
+// ТЗ - https://go.dev/tour/flowcontrol/8
 
 func Sqrt(x float64) float64 {
 	z := 1.0 // начальное предположение
