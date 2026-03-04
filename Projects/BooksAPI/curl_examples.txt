@@ -1,0 +1,120 @@
+# Books API test script
+
+Base URL
+
+http://localhost:3000/api/v1
+
+---
+
+# 1. Create book
+
+curl -X POST http://localhost:3000/api/v1/books
+-H "Content-Type: application/json"
+-d '{
+"title":"Clean Code",
+"author":"Robert C. Martin",
+"isbn":"9780132350884"
+}'
+
+Response:
+
+{
+"id":1,
+"title":"Clean Code",
+"author":"Robert C. Martin",
+"isbn":"9780132350884"
+}
+
+---
+
+# 2. Create book with validation error
+
+curl -X POST http://localhost:3000/api/v1/books
+-H "Content-Type: application/json"
+-d '{
+"title":"",
+"author":"Robert C. Martin",
+"isbn":""
+}'
+
+Response:
+
+{
+"error":"validation",
+"fields":{
+"title":"required",
+"isbn":"required"
+}
+}
+
+---
+
+# 3. Get book
+
+curl http://localhost:3000/api/v1/books/1
+
+Response:
+
+{
+"id":1,
+"title":"Clean Code",
+"author":"Robert C. Martin",
+"isbn":"9780132350884"
+}
+
+---
+
+# 4. Get non-existing book
+
+curl http://localhost:3000/api/v1/books/999
+
+Response:
+
+{
+"error":"not_found"
+}
+
+---
+
+# 5. Update book
+
+curl -X PUT http://localhost:3000/api/v1/books/1
+-H "Content-Type: application/json"
+-d '{
+"title":"Clean Code (2nd Edition)",
+"author":"Robert C. Martin",
+"isbn":"9780132350884"
+}'
+
+Response:
+
+{
+"id":1,
+"title":"Clean Code (2nd Edition)",
+"author":"Robert C. Martin",
+"isbn":"9780132350884"
+}
+
+---
+
+# 6. Delete book
+
+curl -X DELETE http://localhost:3000/api/v1/books/1
+
+Response:
+
+{
+"status":"ok"
+}
+
+---
+
+# 7. Delete non-existing book
+
+curl -X DELETE http://localhost:3000/api/v1/books/999
+
+Response:
+
+{
+"error":"not_found"
+}

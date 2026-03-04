@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: books-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: books_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  api:
+    build: .
+    container_name: books-api
+    restart: always
+    depends_on:
+      - mysql
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
+
+volumes:
+  mysql_data:

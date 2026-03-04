@@ -1,0 +1,154 @@
+---
+
+## Задание: Books CRUD API (v1)
+
+Сделать REST API для управления книгами.
+
+### Модель
+
+`Book`:
+
+- `id` (int/uuid — на выбор)
+- `title` (string, required)
+- `author` (string, required)
+- `isbn` (string, required)
+
+---
+
+## Endpoints
+
+### 1) Create
+
+**POST** `/api/v1/books`
+
+**Request body (JSON):**
+
+```json
+{
+  "title": "Clean Code",
+  "author": "Robert C. Martin",
+  "isbn": "9780132350884"
+}
+```
+
+**Responses:**
+
+- `201 Created` + JSON книги (включая `id`)
+
+```json
+{
+  "id": 1,
+  "title": "Clean Code",
+  "author": "Robert C. Martin",
+  "isbn": "9780132350884"
+}
+```
+
+- `400 Bad Request` (ошибки валидации)
+
+---
+
+### 2) Read
+
+**GET** `/api/v1/books/:id`
+
+**Responses:**
+
+- `200 OK`
+
+```json
+{
+  "id": 1,
+  "title": "Clean Code",
+  "author": "Robert C. Martin",
+  "isbn": "9780132350884"
+}
+```
+
+- `404 Not Found` если книги нет
+
+---
+
+### 3) Update
+
+**PUT** `/api/v1/books/:id`
+
+(обновление существующей книги по id)
+
+**Request body (JSON):**
+
+```json
+{
+  "title": "Clean Code (2nd ed.)",
+  "author": "Robert C. Martin",
+  "isbn": "9780132350884"
+}
+```
+
+**Responses:**
+
+- `200 OK` + JSON обновлённой книги
+- `400 Bad Request` (ошибки валидации)
+- `404 Not Found` если книги нет
+
+---
+
+### 4) Delete
+
+**DELETE** `/api/v1/books/:id`
+
+**Responses:**
+
+- `200 OK` (можно просто текст/JSON)
+
+```json
+{ "status": "ok" }
+```
+
+- `404 Not Found` если книги нет
+
+---
+
+## Валидация (middleware)
+
+Сделать middleware, который применяется **только** к:
+
+- `POST /api/v1/books`
+- `PUT /api/v1/books/:id`
+
+Правила:
+
+- `title` — обязательное, не пустое (после trim)
+- `author` — обязательное, не пустое (после trim)
+- `isbn` — обязательное, не пустое (после trim)
+- при ошибке вернуть `400` и структуру ошибки (любую стабильную, например):
+
+```json
+{
+  "error": "validation",
+  "fields": {
+    "title": "required",
+    "author": "required",
+    "isbn": "required"
+  }
+}
+```
+
+---
+
+## 404 поведение
+
+- Если `:id` не найден → `404 Not Found` (единый формат ошибки по всем эндпоинтам).
+- (Опционально) если роут не существует → `404` с таким же форматом.
+
+---
+
+### Мини-тесты (что должно проходить)
+
+- Create валидный → `201`
+- Create без `title` → `400`
+- Get несуществующий id → `404`
+- Update несуществующий id → `404`
+- Delete несуществующий id → `404`
+
+## Предусмотреть механизм миграции и сами миграции для таблицы books
